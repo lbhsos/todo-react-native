@@ -4,18 +4,22 @@ import {
     Text, 
     TouchableOpacity, 
     StyleSheet, 
-    Dimensions
+    Dimensions,
+    TextInput,
 } from "react-native";
 
 const { width, height } = Dimensions.get("window");
+
 
 export default class Todo extends Component{
     state={
         isEditing: false,
         isCompleted: false,
+        toDoValue: "",
     }
     render(){
-        const { isCompleted, isEditing } = this.state;
+        const { text } = this.props;
+        const { isCompleted, isEditing, toDoValue } = this.state;
         return(
             <View style={styles.container}>
                 <View style={styles.column}>
@@ -25,12 +29,25 @@ export default class Todo extends Component{
                         isCompleted ? styles.completedCircle : styles.uncompletedCircle
                         ]}/>
                 </TouchableOpacity>
-                <Text style={[
-                    styles.text, 
-                    isCompleted ? styles.completedText : styles.uncompletedText
-                    ]} >
-                    Hello I'm a To do Check if it is too long
-                </Text>
+                {isEditing ? (
+                    <TextInput 
+                        style={[
+                            styles.input, 
+                            styles.text,
+                            isCompleted ? styles.completedText : styles.uncompletedText
+                        ]} 
+                        value={toDoValue}
+                        multiline={true}
+                        onChangeText={this._controllInput}
+                    />
+                ) : (
+                    <Text style={[
+                        styles.text, 
+                        isCompleted ? styles.completedText : styles.uncompletedText
+                        ]} >
+                        {text}
+                    </Text>
+                )}
                 </View>
                     {isEditing ? (
                         <View style={styles.actions}>
@@ -67,13 +84,20 @@ export default class Todo extends Component{
         })
     }
     _startEditing = () => {
+        const { text } = this.props;
         this.setState({
             isEditing: true,
+            toDoValue: text
         });
     };
     _finishEditing = () => {
         this.setState({
             isEditing: false,
+        })
+    }
+    _controllInput = (text) => {
+        this.setState({
+            toDoValue: text
         })
     }
 }
@@ -126,5 +150,9 @@ const styles = StyleSheet.create({
     actionContainer:{
         marginVertical: 10,
         marginHorizontal: 10, // 손 뚱뚱하니까 근처에서도 감지할 수 있게
+    },
+    input:{
+        marginVertical: 20,
+        width: width / 2
     }
 });
