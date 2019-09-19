@@ -21,6 +21,8 @@ export default class Todo extends Component{
         text: PropTypes.string.isRequired,
         isCompleted: PropTypes.bool.isRequired,
         deleteTodo: PropTypes.func.isRequired,
+        uncompleteTodo: PropTypes.func.isRequired,
+        completeTodo: PropTypes.func.isRequired,
         id: PropTypes.string.isRequired,
     }
     state={
@@ -28,8 +30,8 @@ export default class Todo extends Component{
         toDoValue: "",
     }
     render(){
-        const { isCompleted, isEditing, toDoValue } = this.state;
-        const { text,id,deleteTodo } = this.props;
+        const { isEditing, toDoValue } = this.state;
+        const { text, id, deleteTodo, isCompleted } = this.props;
         
         return(
             <View style={styles.container}>
@@ -90,11 +92,12 @@ export default class Todo extends Component{
         );
     }
     _toggleComplete = () => {
-        this.setState(prevState => {
-            return {
-                isCompleted: !prevState.isCompleted
-            }
-        })
+        const { isCompleted, uncompleteTodo, completeTodo, id } = this.props;
+        if(isCompleted){
+            uncompleteTodo(id)
+        } else {
+            completeTodo(id)
+        }
     }
     _startEditing = () => {
         const { text } = this.props;
@@ -113,6 +116,7 @@ export default class Todo extends Component{
             toDoValue: text
         });
     };
+    
 }
 
 const styles = StyleSheet.create({
