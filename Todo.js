@@ -24,6 +24,7 @@ export default class Todo extends Component{
         uncompleteTodo: PropTypes.func.isRequired,
         completeTodo: PropTypes.func.isRequired,
         id: PropTypes.string.isRequired,
+        updateTodo: PropTypes.func.isRequired,
     }
     state={
         isEditing: false,
@@ -107,6 +108,9 @@ export default class Todo extends Component{
         });
     };
     _finishEditing = () => {
+        const { toDoValue } = this.state;
+        const { id, updateTodo } = this.props;
+        updateTodo(id, toDoValue);
         this.setState({
             isEditing: false,
         });

@@ -41,6 +41,7 @@ export default class App extends React.Component{
             deleteTodo={this._deleteTodo}
             uncompleteTodo={this._uncompleteTodo}
             completeTodo={this._completeTodo}
+            updateTodo={this._updateTodo}
           />)}
           </ScrollView>
         </View>
@@ -127,6 +128,21 @@ export default class App extends React.Component{
       return {...newState};
     });
   };
+  _updateTodo = (id, text) => {
+    this.setState(prevState => {
+      const newState = {
+        ...prevState,
+        todos:{
+          ...prevState.todos,
+          [id]: {
+            ...prevState.todos[id],
+            text: text
+          }
+        }
+      }
+      return {...newState};
+    });
+  }
 }
 
 const styles = StyleSheet.create({
