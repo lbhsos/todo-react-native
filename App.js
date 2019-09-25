@@ -51,7 +51,9 @@ export default class App extends React.Component{
           onSubmitEditing={this._addTodo} // when I click "done"
           />
           <ScrollView contentContainerStyle={styles.todos}>
-            {Object.values(todos).map(todo => <Todo key={todo.id}{...todo} 
+            {Object.values(todos)
+            .reverse()
+            .map(todo => <Todo key={todo.id}{...todo} 
             deleteTodo={this._deleteTodo}
             uncompleteTodo={this._uncompleteTodo}
             completeTodo={this._completeTodo}
@@ -67,10 +69,20 @@ export default class App extends React.Component{
       newTodo: text
     });
   }
-  _loadToDos = () => {
-    this.setState({
-      loadedTodos: true
-    });
+  _loadToDos = async () => {
+    try{
+      //'await' means _loadToDos function waits for getItem
+      const todos = await AsyncStorage.getItem("todos");
+      const parsedTodos = JSON.parse(todos);
+      console.log(todos);
+      this.setState({
+        loadedTodos: true,
+        todos:parsedTodos || {}
+      });
+    }catch(err){
+      console.log(err);
+    }
+    
   };
   _addTodo = ()=>{
     const { newTodo } = this.state;
@@ -163,9 +175,9 @@ export default class App extends React.Component{
     });
   }
   _saveTodos = (newTodos) => {
-    console.log(JSON.stringify(newTodos));
     // asyncstorage is make to save strings 
     // we have to turn our object to string
+    // asyncstorage {key: value}
     const saveTodos = AsyncStorage.setItem("todos", JSON.stringify(newTodos));
   }
 }
@@ -182,7 +194,6 @@ const styles = StyleSheet.create({
     marginTop: 50,
     fontWeight:"200",
     marginBottom: 30,
-
   },
   card:{
     backgroundColor: "white",

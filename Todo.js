@@ -32,7 +32,12 @@ export default class Todo extends Component{
     }
     render(){
         const { isEditing, toDoValue } = this.state;
-        const { text, id, deleteTodo, isCompleted } = this.props;
+        const { 
+            text, 
+            id, 
+            deleteTodo, 
+            isCompleted 
+        } = this.props;
         
         return(
             <View style={styles.container}>
@@ -81,7 +86,11 @@ export default class Todo extends Component{
                                     <Text style={styles.actionText}>✏️</Text>
                                 </View>
                             </TouchableOpacity>
-                            <TouchableOpacity onPressOut={()=> deleteTodo(id)}>
+                            <TouchableOpacity onPressOut={event=> {
+                                event.stopPropagation; 
+                                deleteTodo(id);
+                                }}
+                            >
                                 <View style={styles.actionContainer}>
                                     <Text style={styles.actionText}>❌</Text>
                                 </View>
@@ -92,7 +101,8 @@ export default class Todo extends Component{
             
         );
     }
-    _toggleComplete = () => {
+    _toggleComplete = (event) => {
+        event.stopPropagation();
         const { isCompleted, uncompleteTodo, completeTodo, id } = this.props;
         if(isCompleted){
             uncompleteTodo(id)
@@ -100,12 +110,14 @@ export default class Todo extends Component{
             completeTodo(id)
         }
     }
-    _startEditing = () => {
+    _startEditing = (event) => {
+        event.stopPropagation();
         this.setState({
             isEditing: true,
         });
     };
-    _finishEditing = () => {
+    _finishEditing = (event) => {
+        event.stopPropagation();
         const { toDoValue } = this.state;
         const { id, updateTodo } = this.props;
         updateTodo(id, toDoValue);
@@ -132,11 +144,11 @@ const styles = StyleSheet.create({
 
     },
     circle:{
-        width: 35,
-        height: 35,
-        borderRadius: 25,
+        width: 30,
+        height: 30,
+        borderRadius: 15,
         borderColor: "red",
-        borderWidth: 4,
+        borderWidth: 3,
         marginRight: 20
     },
     text:{
