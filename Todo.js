@@ -101,10 +101,8 @@ export default class Todo extends Component{
         }
     }
     _startEditing = () => {
-        const { text } = this.props;
         this.setState({
             isEditing: true,
-            toDoValue: text
         });
     };
     _finishEditing = () => {

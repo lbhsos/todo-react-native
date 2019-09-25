@@ -1,12 +1,25 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Text, View, StatusBar, TextInput, Dimensions, Platform} from 'react-native';
+import { 
+  ScrollView, 
+  StyleSheet, 
+  Text, 
+  View, 
+  StatusBar, 
+  TextInput, 
+  Dimensions, 
+  Platform,
+  AsyncStorage
+} from 'react-native';
 import Todo from "./Todo"
 import { AppLoading } from 'expo';
 import uuidv1 from "uuid/v1";
 
+
+
 const { height, width } = Dimensions.get("window");
 
 export default class App extends React.Component{
+  // think state just like database
   state = {
     newTodo: "",
     loadedTodos: false,
@@ -17,6 +30,7 @@ export default class App extends React.Component{
   };
   render(){
     const { newTodo, loadedTodos, todos } = this.state;
+    //console.log(todos);
     
     if (!loadedTodos){
       return <AppLoading /> 
@@ -82,6 +96,7 @@ export default class App extends React.Component{
             ...newTodoObject
           }
         }
+        this._saveTodos(newState.todos);
         return {...newState};
       });
     }
@@ -95,6 +110,7 @@ export default class App extends React.Component{
             ...prevState,
             ...todos
         }
+        this._saveTodos(newState.todos);
         return {...newState};
     });
   }
@@ -110,6 +126,7 @@ export default class App extends React.Component{
           }
         }
       }
+      this._saveTodos(newState.todos);
       return {...newState};
     });
   }
@@ -125,6 +142,7 @@ export default class App extends React.Component{
           }
         }
       }
+      this._saveTodos(newState.todos);
       return {...newState};
     });
   };
@@ -140,8 +158,15 @@ export default class App extends React.Component{
           }
         }
       }
+      this._saveTodos(newState.todos);
       return {...newState};
     });
+  }
+  _saveTodos = (newTodos) => {
+    console.log(JSON.stringify(newTodos));
+    // asyncstorage is make to save strings 
+    // we have to turn our object to string
+    const saveTodos = AsyncStorage.setItem("todos", JSON.stringify(newTodos));
   }
 }
 
